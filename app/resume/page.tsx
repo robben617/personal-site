@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { profile, works } from "@/lib/content";
 import { PrintButton } from "@/components/print-button";
 
@@ -15,7 +16,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="print-avoid-break mt-8 border-t border-line pt-5 first:mt-0 first:border-t-0 first:pt-0">
+    <section className="print-avoid-break mt-8 border-t border-ink/[0.07] pt-5 first:mt-0 first:border-t-0 first:pt-0">
       <h3 className="text-[11px] uppercase tracking-[0.16em] text-ink-3">
         {title}
       </h3>
@@ -34,18 +35,31 @@ export default function ResumePage() {
         <PrintButton />
       </div>
 
-      <article className="mx-auto max-w-[680px]">
+      <article className="glass mx-auto max-w-[680px] rounded-2xl p-7 lg:p-10 print:border-0 print:bg-transparent print:p-0 print:shadow-none">
         <header className="print-avoid-break">
-          <div className="flex flex-wrap items-baseline gap-x-3">
-            <h1 className="text-[26px] font-semibold tracking-tight text-ink">
-              {b.name}
-            </h1>
-            <span className="text-[14px] text-ink-3">{b.alias}</span>
+          <div className="flex items-center gap-4">
+            <div className="avatar-ring h-[58px] w-[58px] shrink-0 rounded-full">
+              <Image
+                src="/avatar.jpg"
+                alt={b.name}
+                width={116}
+                height={116}
+                className="h-full w-full rounded-full object-cover"
+              />
+            </div>
+            <div>
+              <div className="flex flex-wrap items-baseline gap-x-3">
+                <h1 className="text-[26px] font-semibold tracking-tight text-ink">
+                  {b.name}
+                </h1>
+                <span className="text-[14px] text-ink-3">{b.alias}</span>
+              </div>
+              <p className="mt-1.5 text-[12.5px] leading-6 text-ink-2">
+                {b.school} · {b.major} · {b.degree} · {b.graduation} 年毕业
+              </p>
+            </div>
           </div>
-          <p className="mt-2 text-[12.5px] leading-6 text-ink-2">
-            {b.school} · {b.major} · {b.degree} · {b.graduation} 年毕业
-          </p>
-          <p className="mt-0.5 text-[12.5px] leading-6 text-ink-2">
+          <p className="mt-3 text-[12.5px] leading-6 text-ink-2">
             {b.location}
             {b.email ? (
               <>
@@ -168,7 +182,7 @@ export default function ResumePage() {
           </Section>
         ) : null}
 
-        <p className="no-print mt-10 border-t border-line pt-4 text-[11px] leading-6 text-ink-3">
+        <p className="no-print mt-10 border-t border-ink/[0.07] pt-4 text-[11px] leading-6 text-ink-3">
           这份页面按 A4 排版，用浏览器打印即可导出 PDF。站内还有个 AI
           分身，想追问某个项目的细节可以直接去问它。
         </p>

@@ -4,7 +4,7 @@ export function PrintButton() {
   return (
     <button
       onClick={() => window.print()}
-      className="inline-flex items-center gap-1.5 rounded-md border border-line px-3 py-1.5 text-[12px] text-ink-2 transition-colors hover:border-brand/40 hover:text-brand"
+      className="glass glass-hover inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] text-ink-2"
     >
       <svg
         width="13"

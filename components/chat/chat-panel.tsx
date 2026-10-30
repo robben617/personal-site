@@ -137,7 +137,7 @@ export function ChatPanel() {
                 <button
                   key={s}
                   onClick={() => send(s)}
-                  className="rounded-lg border border-line px-3 py-2 text-left text-[12.5px] text-ink-2 transition-colors hover:border-brand/40 hover:bg-brand-soft/60 hover:text-brand"
+                  className="glass glass-hover rounded-xl px-3.5 py-2.5 text-left text-[12.5px] text-ink-2 hover:text-brand"
                 >
                   {s}
                 </button>
@@ -151,7 +151,7 @@ export function ChatPanel() {
               if (m.role === "user") {
                 return (
                   <div key={i} className="flex justify-end">
-                    <p className="max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-br-md bg-brand px-3.5 py-2 text-[13px] leading-6 text-white">
+                    <p className="max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-br-md bg-[linear-gradient(135deg,#4f46e5,#7c3aed)] px-3.5 py-2 text-[13px] leading-6 text-white shadow-[0_8px_24px_-12px_rgba(79,70,229,0.7)]">
                       {m.content}
                     </p>
                   </div>
@@ -193,8 +193,8 @@ export function ChatPanel() {
         )}
       </div>
 
-      <div className="shrink-0 border-t border-line px-6 pb-5 pt-3 lg:px-14">
-        <div className="flex items-end gap-2 rounded-xl border border-line bg-paper p-1.5 transition-colors focus-within:border-brand/50">
+      <div className="shrink-0 border-t border-ink/[0.07] px-6 pb-5 pt-3 lg:px-14">
+        <div className="glass flex items-end gap-2 rounded-xl p-1.5">
           <textarea
             ref={taRef}
             value={input}
@@ -221,7 +221,7 @@ export function ChatPanel() {
           {busy ? (
             <button
               onClick={stop}
-              className="mb-0.5 shrink-0 rounded-lg border border-line px-3 py-2 text-[12px] text-ink-2 transition-colors hover:border-ink/30 hover:text-ink"
+              className="mb-0.5 shrink-0 rounded-lg border border-ink/[0.12] px-3 py-2 text-[12px] text-ink-2 transition-colors hover:border-ink/30 hover:text-ink"
             >
               停止
             </button>
@@ -229,7 +229,7 @@ export function ChatPanel() {
             <button
               onClick={() => send(input)}
               disabled={!input.trim()}
-              className="mb-0.5 shrink-0 rounded-lg bg-ink px-3.5 py-2 text-[12px] font-medium text-white transition-opacity disabled:opacity-25"
+              className="mb-0.5 shrink-0 rounded-lg bg-[linear-gradient(135deg,#4f46e5,#7c3aed)] px-3.5 py-2 text-[12px] font-medium text-white shadow-[0_6px_18px_-8px_rgba(79,70,229,0.8)] transition-opacity disabled:opacity-25"
             >
               发送
             </button>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -36,22 +37,34 @@ export function Sidebar({ name, alias, tagline, email, github }: Props) {
   }
 
   return (
-    <aside className="flex shrink-0 flex-col justify-between gap-6 border-b border-line px-6 py-7 lg:sticky lg:top-0 lg:h-dvh lg:w-[300px] lg:gap-0 lg:border-b-0 lg:border-r lg:px-9 lg:py-12">
+    <aside className="flex shrink-0 flex-col justify-between gap-6 border-b border-ink/[0.07] px-6 py-7 lg:sticky lg:top-0 lg:h-dvh lg:w-[300px] lg:gap-0 lg:border-b-0 lg:border-r lg:px-9 lg:py-12">
       <div>
-        <Link href="/" className="group inline-block">
-          <div className="flex items-baseline gap-2">
-            <h1 className="text-[22px] font-semibold tracking-tight text-ink">
-              {name}
-            </h1>
-            <span className="text-[13px] text-ink-3">{alias}</span>
+        <div className="flex items-center gap-3.5 lg:flex-col lg:items-start lg:gap-5">
+          <div className="avatar-ring h-11 w-11 shrink-0 rounded-full shadow-[0_6px_18px_-6px_rgba(99,102,241,0.55)] lg:h-[58px] lg:w-[58px]">
+            <Image
+              src="/avatar.jpg"
+              alt={name}
+              width={116}
+              height={116}
+              className="h-full w-full rounded-full object-cover"
+            />
           </div>
-        </Link>
 
-        <p className="mt-3 max-w-[240px] text-[13px] leading-6 text-ink-2">
+          <Link href="/" className="group inline-block">
+            <div className="flex items-baseline gap-2">
+              <h1 className="text-[22px] font-semibold tracking-tight text-ink transition-colors group-hover:text-brand">
+                {name}
+              </h1>
+              <span className="text-[13px] text-ink-3">{alias}</span>
+            </div>
+          </Link>
+        </div>
+
+        <p className="mt-3 max-w-[240px] text-[13px] leading-6 text-ink-2 lg:mt-5">
           {tagline}
         </p>
 
-        <nav className="mt-7 lg:mt-12">
+        <nav className="mt-6 lg:mt-11">
           <ul className="flex gap-1 overflow-x-auto lg:flex-col lg:gap-0">
             {NAV.map((item) => {
               const active = isActive(item.href);
@@ -75,9 +88,9 @@ export function Sidebar({ name, alias, tagline, email, github }: Props) {
                     <span className="lg:hidden">{item.label}</span>
                     <span className="hidden items-center gap-3 lg:flex">
                       <span
-                        className={`h-px transition-all ${
+                        className={`h-px transition-all duration-300 ${
                           active
-                            ? "w-6 bg-brand"
+                            ? "w-6 bg-brand shadow-[0_0_8px_rgba(79,70,229,0.65)]"
                             : "w-3 bg-ink-3/40 group-hover:w-6"
                         }`}
                       />
@@ -97,7 +110,7 @@ export function Sidebar({ name, alias, tagline, email, github }: Props) {
         {email ? (
           <button
             onClick={copyEmail}
-            className="group inline-flex items-center gap-2 rounded-md border border-line px-3 py-2 text-[12px] text-ink-2 transition-colors hover:border-brand/40 hover:text-brand"
+            className="glass glass-hover inline-flex items-center gap-2 rounded-lg px-3 py-2 text-[12px] text-ink-2"
             title={email}
           >
             <svg
