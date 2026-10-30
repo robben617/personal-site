@@ -42,6 +42,7 @@ npm start
 | `DEEPSEEK_API_KEY` | 否 | 空 | 留空则 `/api/chat` 走演示模式 |
 | `DEEPSEEK_MODEL` | 否 | `deepseek-chat` | 可换 `deepseek-v4-pro` |
 | `NEXT_PUBLIC_SITE_URL` | 否 | `http://localhost:3000` | 换域名时只改这一处 |
+| `CONTACT_EMAIL` | 否 | 空 | 页面展示的联系邮箱；留空则隐藏邮箱入口 |
 
 ## 目录结构
 
@@ -80,6 +81,7 @@ lib/
 ## 安全
 
 - `.env*` 已加入 `.gitignore`，密钥不会进仓库
+- **联系邮箱不写进仓库**：`data/profile.json` 的 `email` 留空，构建时由 `CONTACT_EMAIL` 注入，公开仓库里看不到明文邮箱
 - 上游错误不透传原文，只返回归类后的提示
 - 单条输入 800 字上限，最多带 12 轮历史，总长 6000 字
 

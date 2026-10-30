@@ -94,25 +94,27 @@ export function Sidebar({ name, alias, tagline, email, github }: Props) {
       </div>
 
       <div className="flex items-center gap-3 lg:flex-col lg:items-start lg:gap-3">
-        <button
-          onClick={copyEmail}
-          className="group inline-flex items-center gap-2 rounded-md border border-line px-3 py-2 text-[12px] text-ink-2 transition-colors hover:border-brand/40 hover:text-brand"
-          title={email}
-        >
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            aria-hidden="true"
+        {email ? (
+          <button
+            onClick={copyEmail}
+            className="group inline-flex items-center gap-2 rounded-md border border-line px-3 py-2 text-[12px] text-ink-2 transition-colors hover:border-brand/40 hover:text-brand"
+            title={email}
           >
-            <rect x="2" y="4" width="20" height="16" rx="2" />
-            <path d="m2 7 10 6 10-6" />
-          </svg>
-          {copied ? "已复制" : "复制邮箱"}
-        </button>
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <path d="m2 7 10 6 10-6" />
+            </svg>
+            {copied ? "已复制" : "复制邮箱"}
+          </button>
+        ) : null}
 
         {github ? (
           <a

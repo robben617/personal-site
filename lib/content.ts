@@ -36,7 +36,19 @@ export type Profile = {
   facts: string[];
 };
 
-export const profile = rawProfile as Profile;
+/**
+ * 邮箱不写在仓库里：profile.json 的 email 留空，构建时从环境变量注入。
+ * 这样 GitHub 上看不到明文，而页面照常显示。
+ */
+const CONTACT_EMAIL = process.env.CONTACT_EMAIL?.trim() ?? "";
+
+export const profile: Profile = {
+  ...(rawProfile as Profile),
+  basics: {
+    ...(rawProfile as Profile).basics,
+    email: CONTACT_EMAIL,
+  },
+};
 export const works = rawWorks.works as Work[];
 
 /** 首页数字锚点，全部取自 works.json，避免与知识库不同步 */
@@ -71,7 +83,15 @@ export function buildKnowledgeBase(): string {
   lines.push(`学校：${b.school}，${b.major}专业，${b.degree}，${b.graduation} 年毕业。`);
   lines.push(`所在城市：${b.location}。`);
   lines.push(`自我描述：${b.intro}`);
-  lines.push(`可用联系方式：邮箱 ${b.email}；GitHub ${b.github}。`);
+  const contacts = [
+    b.email ? `邮箱 ${b.email}` : "",
+    b.github ? `GitHub ${b.github}` : "",
+  ].filter(Boolean);
+  lines.push(
+    contacts.length
+      ? `可用联系方式：${contacts.join("；")}。`
+      : "可用联系方式：站内暂未公开。",
+  );
   lines.push("");
 
   lines.push("# 技能");
@@ -136,7 +156,7 @@ export function buildSystemPrompt(): string {
 - 不评价任何第三方公司、学校、同事；不聊薪资、其他候选人、招聘流程；不聊政治敏感话题。遇到这类问题，简短说明不方便聊，并把话题引回作品。
 
 ## 引导
-- 对方问到联系方式，给邮箱，并说明页面上有复制按钮。
+- 对方问到联系方式：${b.email ? "给邮箱，并说明页面上有复制按钮" : "站内暂时没挂邮箱，让对方通过 GitHub 联系"}。
 - 对方看起来对某个作品感兴趣，可以主动补一句这个作品里最值得说的技术决策。
 - 对方问"你能做什么"，说明你能回答关于他的经历、技能和作品的问题。
 

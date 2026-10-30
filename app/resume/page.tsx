@@ -46,20 +46,30 @@ export default function ResumePage() {
             {b.school} · {b.major} · {b.degree} · {b.graduation} 年毕业
           </p>
           <p className="mt-0.5 text-[12.5px] leading-6 text-ink-2">
-            {b.location} ·{" "}
-            <a href={`mailto:${b.email}`} className="text-brand hover:underline">
-              {b.email}
-            </a>{" "}
-            ·{" "}
+            {b.location}
+            {b.email ? (
+              <>
+                {" · "}
+                <a
+                  href={`mailto:${b.email}`}
+                  className="text-brand hover:underline"
+                >
+                  {b.email}
+                </a>
+              </>
+            ) : null}
             {b.github ? (
-              <a
-                href={b.github}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="text-brand hover:underline"
-              >
-                github.com/robben617
-              </a>
+              <>
+                {" · "}
+                <a
+                  href={b.github}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="text-brand hover:underline"
+                >
+                  github.com/robben617
+                </a>
+              </>
             ) : null}
           </p>
         </header>
