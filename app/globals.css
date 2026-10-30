@@ -239,9 +239,255 @@ body::after {
   }
 }
 
+/* ============================================================
+   首屏片头：名字落版
+   只在 <html data-intro="on"> 时可见，默认完全不可见。
+   退场由 CSS animation 的 forwards 完成，不依赖 JS 定时器。
+   ============================================================ */
+
+/* 思源宋体子集：只含「董浩南京工程学院网络ROBEN·」，3.8KB。
+   完整思源宋体 20MB，为 1.75 秒的片头加载 20MB 不可接受。 */
+@font-face {
+  font-family: "Intro Serif";
+  src: url("/fonts/serif-intro.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 片头期间页面底色也转深，避免遮罩出现前闪一下浅色 */
+html[data-intro="on"] {
+  background: #0a0b11;
+}
+
+.intro-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #0a0b11;
+  opacity: 0;
+  visibility: hidden;
+}
+
+html[data-intro="on"] .intro-curtain {
+  opacity: 1;
+  visibility: visible;
+  animation: intro-out 0.42s cubic-bezier(0.4, 0, 0.2, 1) 1.75s both;
+}
+
+@keyframes intro-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* 深色底上的极光，与首页呼应但更收敛 */
+.intro-aurora {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  /* 光斑尺寸随视口收缩，否则窄屏上三团糊成一片均匀蓝紫，失去中心 */
+  background:
+    radial-gradient(
+      min(760px, 88vw) min(500px, 64vh) at 24% 26%,
+      rgba(99, 102, 241, 0.46),
+      transparent 66%
+    ),
+    radial-gradient(
+      min(620px, 78vw) min(440px, 58vh) at 80% 76%,
+      rgba(6, 182, 212, 0.3),
+      transparent 66%
+    ),
+    radial-gradient(
+      min(520px, 66vw) min(380px, 50vh) at 52% 52%,
+      rgba(124, 58, 237, 0.15),
+      transparent 68%
+    );
+}
+
+html[data-intro="on"] .intro-aurora {
+  animation: intro-fade 1.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes intro-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.intro-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* 必须限宽：flex item 默认按内容撑开，副标题一行超宽会把整块顶出屏幕导致居中失效 */
+  width: 100%;
+  max-width: 100%;
+  padding: 0 24px;
+  /* 副标题占了下半部分，整体上移一点，让名字落在视觉中心 */
+  margin-top: -3vh;
+}
+
+.intro-name {
+  display: flex;
+  font-family: "Intro Serif", var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(72px, 13.5vw, 168px);
+  line-height: 1.08;
+  letter-spacing: 0.14em;
+  /* 补掉末字后多出的字距，否则整块视觉偏左 */
+  margin-right: -0.14em;
+  color: #ffffff;
+  text-shadow: 0 4px 60px rgba(129, 140, 248, 0.22);
+}
+
+.intro-char {
+  display: inline-block;
+  opacity: 0;
+  will-change: transform, opacity, filter;
+}
+
+html[data-intro="on"] .intro-char {
+  animation-name: intro-char;
+  animation-duration: 0.64s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+}
+
+@keyframes intro-char {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.965);
+    filter: blur(9px);
+  }
+  62% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.intro-sub {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 34px;
+  max-width: 100%;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.55);
+  opacity: 0;
+}
+
+html[data-intro="on"] .intro-sub {
+  animation: intro-fade 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0.72s both;
+}
+
+.intro-alias {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: rgba(199, 210, 254, 0.86);
+}
+
+.intro-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.intro-cn {
+  font-size: 13.5px;
+  letter-spacing: 0.09em;
+}
+
+/* 窄屏：收紧副标题字距与间距，避免一行撑满后换行难看 */
+@media (max-width: 480px) {
+  .intro-alias {
+    font-size: 11.5px;
+    letter-spacing: 0.22em;
+  }
+  .intro-cn {
+    font-size: 12px;
+  }
+  .intro-sub {
+    gap: 9px;
+    margin-top: 24px;
+  }
+  .intro-skip {
+    right: 18px;
+    bottom: 16px;
+    font-size: 10px;
+  }
+}
+
+.intro-skip {
+  position: absolute;
+  right: 26px;
+  bottom: 22px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.34);
+  opacity: 0;
+}
+
+html[data-intro="on"] .intro-skip {
+  animation: intro-fade 0.6s ease 1s both;
+}
+
+/* 底部进度线：同时是"还有多久"的信号 */
+.intro-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  z-index: 2;
+}
+
+.intro-bar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #818cf8, #c084fc, #22d3ee);
+  box-shadow: 0 0 14px rgba(129, 140, 248, 0.75);
+}
+
+html[data-intro="on"] .intro-bar i {
+  animation: intro-bar 1.58s cubic-bezier(0.32, 0.72, 0.28, 1) both;
+}
+
+@keyframes intro-bar {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
 /* 简历打印：所有特效在这里全部关掉，保证是干净的一页 A4 */
 @media print {
   .no-print {
+    display: none !important;
+  }
+  .intro-curtain {
     display: none !important;
   }
   html,

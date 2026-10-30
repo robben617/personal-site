@@ -1,5 +1,6 @@
 import { profile, works, getHeadlineMetrics } from "@/lib/content";
 import { WorkCard, AskEntry } from "@/components/work-card";
+import { IntroCurtain } from "@/components/intro";
 
 function RetrievalFlow() {
   return (
@@ -97,7 +98,10 @@ export default function HomePage() {
   const metrics = getHeadlineMetrics();
 
   return (
-    <div className="px-6 pb-16 pt-10 lg:px-14 lg:pb-24 lg:pt-20">
+    <>
+      <IntroCurtain />
+
+      <div className="px-6 pb-16 pt-10 lg:px-14 lg:pb-24 lg:pt-20">
       <section className="rise">
         <div className="flex items-center gap-3">
           <span className="h-px w-9 bg-[linear-gradient(90deg,#6366f1,transparent)]" />
@@ -171,6 +175,7 @@ export default function HomePage() {
           本站用 Next.js 构建，AI 分身由 DeepSeek 驱动，回答只基于站内资料。
         </p>
       </footer>
-    </div>
+      </div>
+    </>
   );
 }

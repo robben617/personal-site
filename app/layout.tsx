@@ -51,6 +51,25 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="zh-CN" className="h-full antialiased">
       <body className="min-h-full">
+        {/*
+          片头开关：必须在 body 内容解析之前同步执行。
+          默认不加 data-intro = 片头不显示；任何一步失败都退化成"没有片头"。
+          用 sessionStorage 而非 localStorage：同标签页只播一次，
+          换设备/重开浏览器仍会播，评委在自己的机器上能正常看到。
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){
+  try{
+    if(!/^\\/?$/.test(location.pathname)) return;
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if(sessionStorage.getItem('wb-intro')==='1') return;
+    sessionStorage.setItem('wb-intro','1');
+    document.documentElement.setAttribute('data-intro','on');
+  }catch(e){}
+})();`,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
