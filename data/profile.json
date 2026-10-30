@@ -1,0 +1,49 @@
+{
+  "basics": {
+    "name": "董浩",
+    "alias": "Robben",
+    "tagline": "做工程，也把大模型接进真实的业务里。",
+    "location": "南京",
+    "school": "南京工程学院",
+    "major": "网络工程",
+    "degree": "本科",
+    "graduation": "2027",
+    "email": "",
+    "github": "https://github.com/robben617",
+    "intro": "南京工程学院网络工程专业本科在读。主要在做检索与问答系统：把非结构化的文档拆成可检索、可溯源的知识，再用大模型把它变成能真正回答问题的系统。习惯先写评测集、再调参数，用数字判断每一次改动的有效性。"
+  },
+  "skills": [
+    {
+      "group": "后端与接口",
+      "items": ["Python", "FastAPI", "Java", "Spring Boot", "SQLite", "MySQL"]
+    },
+    {
+      "group": "检索与大模型",
+      "items": [
+        "BGE 向量检索",
+        "jieba 分词召回",
+        "RRF 融合排序",
+        "Reranker 重排",
+        "提示词设计"
+      ]
+    },
+    {
+      "group": "工程与部署",
+      "items": ["Docker", "Git", "Linux", "Next.js", "TypeScript"]
+    }
+  ],
+  "awards": [
+    {
+      "title": "省级大学生创新创业大赛 · CarryApp 项目",
+      "year": "2026"
+    }
+  ],
+  "facts": [
+    "校园制度知识问答系统：8 份制度文档，827 条知识条款，82 个实体，81 条关系",
+    "该系统自建 55 题评测集，Recall@5 达到 0.90",
+    "检索方案为双路召回：jieba 分词 + BGE 向量，用 RRF 融合",
+    "接口层统一使用 FastAPI",
+    "知识存储使用 SQLite，未迁移到图数据库",
+    "另有一个面向私域电商的客服问答项目，面向节假日礼品扫码查看场景"
+  ]
+}

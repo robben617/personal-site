@@ -1,0 +1,56 @@
+{
+  "works": [
+    {
+      "slug": "school-agent",
+      "title": "校园制度知识问答系统",
+      "oneLiner": "把 8 份校内制度文档变成能溯源引用的问答系统。",
+      "year": "2026",
+      "role": "独立开发",
+      "status": "已交付",
+      "stack": ["Python", "FastAPI", "SQLite", "BGE", "RRF", "Reranker", "Docker"],
+      "metrics": [
+        { "value": "827", "label": "知识条款" },
+        { "value": "82", "label": "实体" },
+        { "value": "0.90", "label": "Recall@5" }
+      ],
+      "highlights": [
+        "双路召回：jieba 分词与 BGE 向量并行，用 RRF 融合两路结果",
+        "Reranker 二次重排，压低长尾噪声，答案强制附条款出处",
+        "自建 55 题评测集，逐项量化每次改动的增益，Recall@5 稳定在 0.90",
+        "FastAPI 提供接口，Docker 一键部署"
+      ],
+      "links": []
+    },
+    {
+      "slug": "cs-agent",
+      "title": "私域电商客服问答",
+      "oneLiner": "面向节假日礼品扫码场景的客服问答，遇到食品安全问题直接转人工。",
+      "year": "2026",
+      "role": "独立开发",
+      "status": "已交付",
+      "stack": ["Python", "FastAPI", "知识库检索"],
+      "metrics": [],
+      "highlights": [
+        "场景聚焦：用户扫礼品码进来，问的多是领取方式、保质期、能不能吃",
+        "食品安全类问题不做模型兜底，命中关键词直接转人工，避免答错担责",
+        "FastAPI 实现接口层，知识库与业务规则分离"
+      ],
+      "links": []
+    },
+    {
+      "slug": "carryapp",
+      "title": "CarryApp 校园互助应用",
+      "oneLiner": "省级创新创业大赛项目，主体功能已完成，正在推进实机验证。",
+      "year": "2026",
+      "role": "团队项目",
+      "status": "进行中",
+      "stack": ["移动端", "后端接口"],
+      "metrics": [],
+      "highlights": [
+        "面向校园场景的互助类应用，主体功能已开发完成",
+        "当前阶段是实机验证与问题收敛，尚未对外发布"
+      ],
+      "links": []
+    }
+  ]
+}

@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# personal-site
 
-## Getting Started
+个人作品集与线上简历，站内嵌了一个读过站内资料的 AI 分身，可以直接向它提问。
 
-First, run the development server:
+- 首页：作品集与关键数字
+- `/resume`：线上简历，浏览器打印即出 A4 PDF
+- `/ask`：AI 分身，流式回答，只按站内资料作答
+
+## 技术栈
+
+| 层 | 选型 | 说明 |
+|---|---|---|
+| 框架 | Next.js 16（App Router） | 页面静态预渲染，只有一个动态路由 |
+| 语言 | TypeScript | 严格模式 |
+| 样式 | Tailwind CSS 4 | 设计令牌集中定义，不引外部字体 |
+| 模型 | DeepSeek（OpenAI 兼容） | `deepseek-chat`，1M 上下文 |
+| 部署 | Node 运行时 | 需要一个能跑 Node 的平台 |
+
+运行时依赖只有 3 个：`next`、`react`、`react-dom`。
+
+## 本地运行
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # 填入 DEEPSEEK_API_KEY
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+密钥不填也能跑：`/api/chat` 会进入演示模式，逐字吐一段固定话术，用来验证流式链路和界面，不消耗额度。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+生产构建：
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## 环境变量
 
-To learn more about Next.js, take a look at the following resources:
+| 变量 | 必填 | 默认 | 说明 |
+|---|---|---|---|
+| `DEEPSEEK_API_KEY` | 否 | 空 | 留空则 `/api/chat` 走演示模式 |
+| `DEEPSEEK_MODEL` | 否 | `deepseek-chat` | 可换 `deepseek-v4-pro` |
+| `NEXT_PUBLIC_SITE_URL` | 否 | `http://localhost:3000` | 换域名时只改这一处 |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 目录结构
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+app/
+  layout.tsx              侧栏 + 全局元信息 + JSON-LD
+  page.tsx                首页（作品集）
+  resume/page.tsx         线上简历
+  ask/page.tsx            AI 分身
+  api/chat/route.ts       模型网关：限流、密钥、流式转发
+components/
+  sidebar.tsx             侧栏导航与邮箱复制
+  work-card.tsx           作品卡与 AI 入口
+  chat/chat-panel.tsx     流式聊天面板
+data/
+  profile.json            个人信息唯一来源
+  works.json              作品数据唯一来源
+  kb/faq.ts               无法从上面两者派生的手写问答
+lib/
+  content.ts              读数据、生成知识库与系统提示词
+  rate-limit.ts           进程内限流
+```
 
-## Deploy on Vercel
+## 几个设计决策
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**知识库不是另写一份 Markdown。** `lib/content.ts` 从 `profile.json` 和 `works.json` 程序化生成知识库文本，所以页面上显示的数字和 AI 读到的数字永远同源，不会出现"网页说 827、AI 说 800"这种问题。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**没有上向量库。** 全站知识库约 4500 tokens，模型上下文窗口是 1M，全量塞进系统提示词比检索更准也更简单。等评测数据证明直塞不够用了再上 RAG。
+
+**密钥只在服务端。** 浏览器拿不到 Key，请求统一走 `/api/chat`，由服务端带 Key 调模型。前端只接收纯文本流。
+
+**限流在校验之后。** 无效请求不消耗配额，避免误伤正常访客。阈值是每分钟 12 次、每天 150 次。多实例部署时需要把 `lib/rate-limit.ts` 换成 Redis 或 KV，否则每个实例各算各的。
+
+**答案不返回 Markdown。** 提示词里明确要求纯文本，前端直接渲染文本节点，省掉一个 Markdown 解析依赖，也没有 XSS 面。
+
+## 安全
+
+- `.env*` 已加入 `.gitignore`，密钥不会进仓库
+- 上游错误不透传原文，只返回归类后的提示
+- 单条输入 800 字上限，最多带 12 轮历史，总长 6000 字
+
+## License
+
+MIT
