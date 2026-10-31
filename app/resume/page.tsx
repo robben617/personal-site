@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { profile, works } from "@/lib/content";
 import { PrintButton } from "@/components/print-button";
+import { PageHeader, PageFooter } from "@/components/page-header";
 
 export const metadata: Metadata = {
   title: "简历",
@@ -28,14 +29,19 @@ function Section({
 export default function ResumePage() {
   const b = profile.basics;
 
+  /* 整页收成一条 760 的文档栏：页头和纸面同宽，不再出现"宽页头 + 窄纸"的错位 */
   return (
-    <div className="mx-auto w-full max-w-[1180px] px-6 pb-16 pt-10 lg:px-14 lg:pb-24 lg:pt-14">
-      <div className="no-print mx-auto mb-8 flex max-w-[680px] items-center justify-between">
-        <h2 className="text-[14px] font-medium text-ink">线上简历</h2>
-        <PrintButton />
-      </div>
+    <div className="mx-auto w-full max-w-[760px] px-6 pb-16 pt-10 lg:pb-24 lg:pt-14">
+      <PageHeader
+        no="03"
+        kicker="Resume"
+        title="线上简历"
+        meta="A4 · 可直接导出 PDF"
+        as="h2"
+        aside={<PrintButton />}
+      />
 
-      <article className="glass mx-auto max-w-[680px] rounded-2xl p-7 lg:p-10 print:border-0 print:bg-transparent print:p-0 print:shadow-none">
+      <article className="glass mt-7 rounded-2xl p-6 sm:p-8 lg:p-10 print:mt-0 print:border-0 print:bg-transparent print:p-0 print:shadow-none">
         <header className="print-avoid-break">
           <div className="flex items-center gap-4">
             <div className="avatar-ring h-[58px] w-[58px] shrink-0 rounded-full">
@@ -49,10 +55,12 @@ export default function ResumePage() {
             </div>
             <div>
               <div className="flex flex-wrap items-baseline gap-x-3">
-                <h1 className="text-[26px] font-semibold tracking-tight text-ink">
+                <h1 className="text-[27px] font-semibold tracking-[-0.03em] text-ink">
                   {b.name}
                 </h1>
-                <span className="text-[14px] text-ink-3">{b.alias}</span>
+                <span className="font-mono text-[12px] uppercase tracking-[0.16em] text-ink-3">
+                  {b.alias}
+                </span>
               </div>
               <p className="mt-1.5 text-[12.5px] leading-6 text-ink-2">
                 {b.school} · {b.major} · {b.degree} · {b.graduation} 年毕业
@@ -113,12 +121,12 @@ export default function ResumePage() {
                 <dt className="w-[86px] shrink-0 text-[12.5px] text-ink-3">
                   {g.group}
                 </dt>
-                <dd className="flex flex-wrap gap-x-2 gap-y-1 text-[12.5px] leading-6 text-ink-2">
+                <dd className="flex flex-wrap gap-x-1 gap-y-1 text-[12.5px] leading-6 text-ink-2">
                   {g.items.map((it, i) => (
                     <span key={it}>
                       {it}
                       {i < g.items.length - 1 ? (
-                        <span className="ml-2 text-ink-3/40">/</span>
+                        <span className="ml-1 text-ink-3/35">/</span>
                       ) : null}
                     </span>
                   ))}
@@ -129,7 +137,7 @@ export default function ResumePage() {
         </Section>
 
         <Section title="项目经历">
-          <div className="space-y-5">
+          <div className="space-y-6">
             {works.map((w) => (
               <div key={w.slug} className="print-avoid-break">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -187,6 +195,10 @@ export default function ResumePage() {
           分身，想追问某个项目的细节可以直接去问它。
         </p>
       </article>
+
+      <div className="no-print">
+        <PageFooter />
+      </div>
     </div>
   );
 }

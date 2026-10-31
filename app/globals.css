@@ -99,6 +99,86 @@ body::after {
   color: #1e1b4b;
 }
 
+/* ============================================================
+   版面原语：四个内页共用同一套
+   - .kicker  栏目眉标（mono + 宽字距 + 前导序号）
+   - .page-h  页面主标题（负字距，中文标题才有"排过版"的紧致感）
+   - .rule    右端淡出的发丝线，比一条纯色 border 更柔和
+   ============================================================ */
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+}
+
+.kicker::after {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.4;
+}
+
+.page-h {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+
+@media (min-width: 1024px) {
+  .page-h {
+    font-size: 40px;
+  }
+}
+
+.rule {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(22, 24, 29, 0.16) 0%,
+    rgba(22, 24, 29, 0.07) 46%,
+    rgba(22, 24, 29, 0) 100%
+  );
+}
+
+/* 技能 chip：无边框 + 极浅底，悬停才浮出来。比等宽白框更像"标签"而不是"表格" */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 7px;
+  background: rgba(22, 24, 29, 0.04);
+  padding: 5px 9px;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  color: var(--color-ink-2);
+  transition:
+    background-color 0.22s ease,
+    color 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.chip:hover {
+  background: #fff;
+  color: var(--color-ink);
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 1px rgba(99, 102, 241, 0.22),
+    0 8px 18px -12px rgba(49, 46, 129, 0.5);
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -211,6 +291,7 @@ body::after {
 .glow-ring {
   position: absolute;
   inset: 0;
+  z-index: 2;
   border-radius: inherit;
   padding: 1.5px;
   -webkit-mask:
@@ -251,12 +332,57 @@ body::after {
   border-radius: 18px;
   border: 1px solid rgba(22, 24, 29, 0.08);
   background: #ffffff;
+  overflow: hidden;
   box-shadow:
     0 1px 2px rgba(15, 23, 42, 0.04),
     0 18px 40px -30px rgba(30, 27, 75, 0.3);
   transition:
     transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 卡面跟随光：鼠标位置由 JS 写进 --mx / --my，没有 JS 时默认落在顶部中央 */
+.card-spot {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(99, 102, 241, 0.13),
+    rgba(168, 85, 247, 0.05) 42%,
+    transparent 72%
+  );
+  transition: opacity 0.4s ease;
+}
+
+.glow-wrap:hover .card-spot,
+.glow-wrap:focus-within .card-spot {
+  opacity: 1;
+}
+
+/* 卡片右下的幽灵序号：给纯文字卡一个视觉锚点。
+   放右上会和「2026 · 独立开发」撞在一起，所以压到右下角、被卡片边缘裁掉一截。 */
+.card-ghost {
+  position: absolute;
+  bottom: -20px;
+  right: 6px;
+  z-index: 0;
+  font-family: var(--font-mono);
+  font-size: 84px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: rgba(22, 24, 29, 0.028);
+  pointer-events: none;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.4s ease;
+}
+
+.glow-wrap:hover .card-ghost {
+  color: rgba(79, 70, 229, 0.07);
 }
 
 .glow-wrap:hover .work-card,
@@ -346,25 +472,50 @@ body::after {
 }
 
 /* ============ 首页封面 ============
-   只有名字，没有任何介绍文案；遮罩的作用是让字在任何裁切下都站得住。 */
+   只有名字，没有任何介绍文案；遮罩的作用是让字在任何裁切下都站得住。
+   注意：这里不能用一块"力度高、范围小"的径向暗斑——那会在名字周围
+   留下一圈能看出来的椭圆边界。改成多档 stop 的大范围柔化过渡。 */
 .cover-scrim {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    /* 名字后面的一块柔光底，避免压到星空亮星 */
     radial-gradient(
-      min(880px, 92vw) min(520px, 54vh) at 50% 46%,
-      rgba(5, 7, 18, 0.52),
-      transparent 72%
+      118% 84% at 50% 42%,
+      rgba(5, 7, 18, 0.44) 0%,
+      rgba(5, 7, 18, 0.3) 32%,
+      rgba(5, 7, 18, 0.12) 60%,
+      rgba(5, 7, 18, 0) 82%
     ),
     linear-gradient(
       180deg,
-      rgba(6, 8, 20, 0.66) 0%,
-      rgba(6, 8, 20, 0.18) 26%,
-      rgba(6, 8, 20, 0.04) 56%,
-      rgba(6, 8, 20, 0.46) 100%
+      rgba(6, 8, 20, 0.6) 0%,
+      rgba(6, 8, 20, 0.14) 28%,
+      rgba(6, 8, 20, 0.02) 56%,
+      rgba(6, 8, 20, 0.4) 100%
     );
+}
+
+/* 封面图极缓慢漂移：静止的大图会显得是"贴上去的截图"，
+   26 秒一轮的 1.02→1.065 缩放几乎察觉不到，但画面是活的 */
+.cover-img {
+  animation: cover-drift 26s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  will-change: transform;
+}
+
+@keyframes cover-drift {
+  from {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.065) translate3d(-0.8%, -0.6%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover-img {
+    animation: none;
+  }
 }
 
 .cover-kicker {
@@ -432,6 +583,27 @@ body::after {
 }
 .rise {
   animation: rise 0.66s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* 路由转场（app/template.tsx）：比 .rise 更轻，只负责"换页不硬切" */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.page-enter {
+  animation: page-enter 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter {
+    animation: none;
+  }
 }
 
 /* 检索流：沿路径流动的虚线 */

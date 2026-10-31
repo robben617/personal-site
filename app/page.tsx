@@ -27,7 +27,7 @@ export default function HomePage() {
           priority
           sizes="100vw"
           quality={82}
-          className="object-cover object-[54%_40%]"
+          className="cover-img object-cover object-[54%_40%]"
         />
         <div className="cover-scrim" />
 
@@ -49,11 +49,15 @@ export default function HomePage() {
           <p className="cover-alias mt-5">{alias}</p>
         </div>
 
+        {/* 版面角标：像一本册子的版权页，只放真实信息，不做装饰性填充 */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-6 bottom-7 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.22em] text-white/40 lg:inset-x-14 lg:bottom-9"
+          className="pointer-events-none absolute inset-x-6 bottom-7 flex items-end justify-between font-mono text-[9.5px] uppercase tracking-[0.24em] text-white/38 lg:inset-x-14 lg:bottom-9"
         >
-          <span>Cover</span>
+          <span className="flex items-center gap-2">
+            <span className="h-2.5 w-px bg-white/30" />
+            Nanjing, CN
+          </span>
           <span>2026</span>
         </div>
       </section>
