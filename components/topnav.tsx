@@ -20,7 +20,7 @@ const NAV: { href: string; label: string; short?: string; no: string }[] = [
   { href: "/ask", label: "AI 分身", no: "05" },
 ];
 
-export function TopNav({ name, email, github }: Props) {
+export function TopNav({ name, alias, email, github }: Props) {
   const pathname = usePathname();
   const [copied, setCopied] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -62,24 +62,40 @@ export function TopNav({ name, email, github }: Props) {
           : "border-b border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-[var(--nav-h)] max-w-[1180px] items-center gap-4 px-6 lg:px-14">
-        <Link
-          href="/"
-          className="group flex shrink-0 items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
-          aria-label={`${name} · 首页`}
-        >
-          {/* 左上角只留头像当 logo：名字放在首页正中间 */}
-          <span className="avatar-ring h-8 w-8 rounded-full transition-transform duration-300 group-hover:scale-[1.06] sm:h-9 sm:w-9">
-            <Image
-              src="/avatar.jpg"
-              alt=""
-              width={64}
-              height={64}
-              priority
-              className="h-full w-full rounded-full object-cover"
-            />
-          </span>
-        </Link>
+      <div className="mx-auto flex h-[var(--nav-h)] max-w-[1180px] items-center gap-3 px-6 lg:gap-4 lg:px-14">
+        {/* 首页左侧留空：第一眼只留封面本身。其它页给出头像 + 姓名，兼作回首页的入口 */}
+        {isHome ? null : (
+          <Link
+            href="/"
+            className="group flex shrink-0 items-center gap-2.5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+            aria-label={`${name} · 回首页`}
+          >
+            <span className="avatar-ring h-8 w-8 rounded-full transition-transform duration-300 group-hover:scale-[1.06] sm:h-9 sm:w-9">
+              <Image
+                src="/avatar.jpg"
+                alt=""
+                width={64}
+                height={64}
+                priority
+                className="h-full w-full rounded-full object-cover"
+              />
+            </span>
+            <span
+              className={`text-[13.5px] font-semibold tracking-tight transition-colors ${
+                onLight ? "text-ink" : "text-white"
+              }`}
+            >
+              {name}
+            </span>
+            <span
+              className={`hidden text-[11.5px] transition-colors sm:inline ${
+                onLight ? "text-ink-3" : "text-white/55"
+              }`}
+            >
+              {alias}
+            </span>
+          </Link>
+        )}
 
         <nav aria-label="主导航" className="ml-auto">
           <ul className="flex items-center gap-0.5 sm:gap-1">
