@@ -13,12 +13,13 @@ type Props = {
 };
 
 const NAV = [
-  { href: "/", label: "作品", no: "01" },
-  { href: "/resume", label: "简历", no: "02" },
-  { href: "/ask", label: "AI 分身", no: "03" },
+  { href: "/", label: "首页", no: "01" },
+  { href: "/works", label: "作品", no: "02" },
+  { href: "/resume", label: "简历", no: "03" },
+  { href: "/ask", label: "AI 分身", no: "04" },
 ];
 
-export function TopNav({ name, alias, email, github }: Props) {
+export function TopNav({ name, email, github }: Props) {
   const pathname = usePathname();
   const [copied, setCopied] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -63,10 +64,11 @@ export function TopNav({ name, alias, email, github }: Props) {
       <div className="mx-auto flex h-[var(--nav-h)] max-w-[1180px] items-center gap-4 px-6 lg:px-14">
         <Link
           href="/"
-          className="group flex shrink-0 items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+          className="group flex shrink-0 items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
           aria-label={`${name} · 首页`}
         >
-          <span className="avatar-ring h-8 w-8 rounded-full">
+          {/* 左上角只留头像当 logo：名字放在首页正中间 */}
+          <span className="avatar-ring h-9 w-9 rounded-full transition-transform duration-300 group-hover:scale-[1.06]">
             <Image
               src="/avatar.jpg"
               alt=""
@@ -75,20 +77,6 @@ export function TopNav({ name, alias, email, github }: Props) {
               priority
               className="h-full w-full rounded-full object-cover"
             />
-          </span>
-          <span
-            className={`text-[15px] font-semibold tracking-tight transition-colors ${
-              onLight ? "text-ink" : "text-white"
-            }`}
-          >
-            {name}
-          </span>
-          <span
-            className={`hidden text-[12px] transition-colors sm:inline ${
-              onLight ? "text-ink-3" : "text-white/55"
-            }`}
-          >
-            {alias}
           </span>
         </Link>
 

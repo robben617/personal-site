@@ -13,7 +13,7 @@ import { profile } from "@/lib/content";
  *   避免回访用户先看到遮罩再闪一下。
  */
 export function IntroCurtain() {
-  const { name, alias, school, major } = profile.basics;
+  const { name, alias } = profile.basics;
   const chars = Array.from(name);
 
   return (
@@ -36,9 +36,7 @@ export function IntroCurtain() {
         <div className="intro-sub">
           <span className="intro-alias">{alias}</span>
           <span className="intro-dot" />
-          <span className="intro-cn">
-            {school} · {major}
-          </span>
+          <span className="intro-cn">2026</span>
         </div>
       </div>
 

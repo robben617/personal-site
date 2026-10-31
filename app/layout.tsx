@@ -9,7 +9,7 @@ const { name, alias, tagline } = profile.basics;
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${name} ${alias} · 作品集`,
+    default: `${name} ${alias}`,
     template: `%s · ${name} ${alias}`,
   },
   description: `${name}（${alias}）的个人作品集与线上简历。站内内置一个读过本人资料的 AI 分身，可以直接向它提问。`,
