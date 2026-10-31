@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { works } from "@/lib/content";
 import { WorkCard, AskEntry } from "@/components/work-card";
+import { Skills } from "@/components/skills";
 
 export const metadata: Metadata = {
   title: "作品",
@@ -138,7 +139,9 @@ export default function WorksPage() {
         ))}
       </div>
 
-      <section className="mt-12 lg:mt-16">
+      <Skills />
+
+      <section className="mt-12 lg:mt-14">
         <AskEntry />
       </section>
 
