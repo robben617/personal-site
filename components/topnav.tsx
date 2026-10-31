@@ -12,11 +12,12 @@ type Props = {
   github: string;
 };
 
-const NAV = [
+const NAV: { href: string; label: string; short?: string; no: string }[] = [
   { href: "/", label: "首页", no: "01" },
   { href: "/works", label: "作品", no: "02" },
   { href: "/resume", label: "简历", no: "03" },
-  { href: "/ask", label: "AI 分身", no: "04" },
+  { href: "/blog", label: "个人博客", short: "博客", no: "04" },
+  { href: "/ask", label: "AI 分身", no: "05" },
 ];
 
 export function TopNav({ name, email, github }: Props) {
@@ -68,7 +69,7 @@ export function TopNav({ name, email, github }: Props) {
           aria-label={`${name} · 首页`}
         >
           {/* 左上角只留头像当 logo：名字放在首页正中间 */}
-          <span className="avatar-ring h-9 w-9 rounded-full transition-transform duration-300 group-hover:scale-[1.06]">
+          <span className="avatar-ring h-8 w-8 rounded-full transition-transform duration-300 group-hover:scale-[1.06] sm:h-9 sm:w-9">
             <Image
               src="/avatar.jpg"
               alt=""
@@ -81,7 +82,7 @@ export function TopNav({ name, email, github }: Props) {
         </Link>
 
         <nav aria-label="主导航" className="ml-auto">
-          <ul className="flex items-center gap-1">
+          <ul className="flex items-center gap-0.5 sm:gap-1">
             {NAV.map((item) => {
               const active = isActive(item.href);
               return (
@@ -89,7 +90,7 @@ export function TopNav({ name, email, github }: Props) {
                   <Link
                     href={item.href}
                     aria-current={active ? "page" : undefined}
-                    className={`flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[12.5px] sm:px-3 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
+                    className={`flex items-center gap-1.5 rounded-full px-2 py-1.5 text-[12px] max-[360px]:px-1.5 sm:px-3 sm:text-[12.5px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
                       active
                         ? onLight
                           ? "bg-brand-soft font-medium text-brand"
@@ -106,7 +107,14 @@ export function TopNav({ name, email, github }: Props) {
                     >
                       {item.no}
                     </span>
-                    {item.label}
+                    {item.short ? (
+                      <>
+                        <span className="sm:hidden">{item.short}</span>
+                        <span className="hidden sm:inline">{item.label}</span>
+                      </>
+                    ) : (
+                      item.label
+                    )}
                   </Link>
                 </li>
               );

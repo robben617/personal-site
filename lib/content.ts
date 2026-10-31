@@ -1,5 +1,6 @@
 import rawProfile from "@/data/profile.json";
 import rawWorks from "@/data/works.json";
+import rawPosts from "@/data/posts.json";
 import { FAQ } from "@/data/kb/faq";
 
 export type Metric = { value: string; label: string };
@@ -50,6 +51,20 @@ export const profile: Profile = {
   },
 };
 export const works = rawWorks.works as Work[];
+
+export type Post = {
+  slug: string;
+  title: string;
+  date: string;
+  summary: string;
+  tags: string[];
+  body?: string;
+};
+
+/** 按日期倒序，最新在最前；空数组时博客页走空状态 */
+export const posts = (rawPosts.posts as Post[])
+  .slice()
+  .sort((a, b) => (a.date < b.date ? 1 : -1));
 
 /** 首页数字锚点，全部取自 works.json，避免与知识库不同步 */
 export function getHeadlineMetrics(): Metric[] {

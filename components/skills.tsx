@@ -8,23 +8,21 @@ export function Skills() {
   const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   return (
-    <section className="mt-12 lg:mt-16" aria-labelledby="skills-title">
-      <header>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3">
-          Skills
-        </p>
-        <div className="mt-2.5 flex items-baseline justify-between gap-4 border-b border-ink/[0.07] pb-4">
-          <h2
-            id="skills-title"
-            className="text-[19px] font-semibold tracking-[-0.02em] text-ink lg:text-[22px]"
-          >
-            技术栈
-          </h2>
-          <span className="text-[11px] text-ink-3">共 {total} 项</span>
-        </div>
-      </header>
+    <section className="mt-6" aria-labelledby="skills-title">
+      <div className="flex items-baseline justify-between gap-3">
+        <h2
+          id="skills-title"
+          className="flex items-baseline gap-2 text-[13px] font-medium text-ink"
+        >
+          技术栈
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3">
+            Skills
+          </span>
+        </h2>
+        <span className="text-[11px] text-ink-3">共 {total} 项</span>
+      </div>
 
-      <div className="mt-6 space-y-5 lg:space-y-4">
+      <div className="mt-3.5 space-y-2.5 lg:space-y-3">
         {groups.map((group, gi) => (
           <div key={group.group} className="lg:flex lg:items-start lg:gap-6">
             <p className="flex items-center gap-2 text-[12px] font-medium text-ink lg:w-[100px] lg:shrink-0 lg:pt-[20px]">
