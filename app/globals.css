@@ -166,6 +166,120 @@ body::after {
   -webkit-text-fill-color: transparent;
 }
 
+/* ============================================================
+   作品卡：白底黑字 + 悬停彩虹弥散描边
+   - .glow-ring 用 mask 只留 1.2px 描边，不遮内容
+   - .glow-halo 是同一渐变模糊后的光晕，铺在卡片外面一圈
+   - 角度是注册过的自定义属性，所以能直接走 animation 旋转
+   ============================================================ */
+@property --glow-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.glow-wrap {
+  position: relative;
+  isolation: isolate;
+}
+
+.glow-halo,
+.glow-ring {
+  background: conic-gradient(
+    from var(--glow-angle),
+    #6366f1,
+    #22d3ee,
+    #34d399,
+    #fbbf24,
+    #fb7185,
+    #a855f7,
+    #6366f1
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.glow-halo {
+  position: absolute;
+  inset: -8px;
+  z-index: -1;
+  border-radius: 26px;
+  filter: blur(14px);
+}
+
+.glow-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.glow-wrap:hover .glow-halo,
+.glow-wrap:focus-within .glow-halo {
+  opacity: 0.62;
+}
+.glow-wrap:hover .glow-ring,
+.glow-wrap:focus-within .glow-ring {
+  opacity: 1;
+}
+
+@keyframes glow-spin {
+  to {
+    --glow-angle: 360deg;
+  }
+}
+
+.glow-wrap:hover .glow-halo,
+.glow-wrap:hover .glow-ring,
+.glow-wrap:focus-within .glow-halo,
+.glow-wrap:focus-within .glow-ring {
+  animation: glow-spin 5s linear infinite;
+}
+
+.work-card {
+  position: relative;
+  z-index: 1;
+  border-radius: 18px;
+  border: 1px solid rgba(22, 24, 29, 0.08);
+  background: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 18px 40px -30px rgba(30, 27, 75, 0.3);
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.glow-wrap:hover .work-card,
+.glow-wrap:focus-within .work-card {
+  transform: translateY(-3px);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 28px 56px -30px rgba(49, 46, 129, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow-wrap:hover .glow-halo,
+  .glow-wrap:hover .glow-ring,
+  .glow-wrap:focus-within .glow-halo,
+  .glow-wrap:focus-within .glow-ring {
+    animation: none;
+  }
+  .glow-wrap:hover .work-card,
+  .glow-wrap:focus-within .work-card {
+    transform: none;
+  }
+}
+
 /* 头像外圈渐变环 */
 .avatar-ring {
   background: linear-gradient(140deg, #6366f1 0%, #a855f7 52%, #22d3ee 100%);

@@ -8,7 +8,7 @@ function RetrievalFlow() {
     <svg
       viewBox="0 0 320 170"
       fill="none"
-      className="h-auto w-full max-w-[330px]"
+      className="h-auto w-full max-w-[300px]"
       role="img"
       aria-label="双路召回、RRF 融合与重排的流程示意"
     >
@@ -164,16 +164,19 @@ export default function HomePage() {
 
       {/* ============ 检索链路（横向细卡） ============ */}
       <div className="mx-auto w-full max-w-[1180px] px-6 lg:px-14">
-        <section className="glass mt-6 rounded-2xl px-5 py-4 lg:-mt-16 lg:flex lg:items-center lg:gap-10 lg:py-4 lg:pr-6">
-          <div className="shrink-0">
+        <section
+          id="chain"
+          className="glass mt-6 scroll-mt-[calc(var(--nav-h)+16px)] rounded-2xl px-5 py-4 lg:-mt-16 lg:flex lg:items-center lg:gap-8 lg:py-5"
+        >
+          <div className="lg:min-w-0 lg:flex-1">
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3">
               检索链路
             </p>
-            <p className="mt-1.5 max-w-[320px] text-[12.5px] leading-6 text-ink-2">
+            <p className="mt-1.5 text-[12.5px] leading-6 text-ink-2 lg:max-w-[430px]">
               jieba 与 BGE 双路召回，RRF 融合后重排，答案带原文出处。
             </p>
           </div>
-          <div className="mt-3 flex-1 lg:mt-0 lg:flex lg:justify-end">
+          <div className="mt-2 shrink-0 lg:mt-0 lg:w-[300px]">
             <RetrievalFlow />
           </div>
         </section>
@@ -186,14 +189,9 @@ export default function HomePage() {
             <span className="text-[11px] text-ink-3">共 {works.length} 个</span>
           </div>
 
-          <div className="mt-5 grid gap-4 md:grid-cols-2">
+          <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {works.map((work, i) => (
-              <WorkCard
-                key={work.slug}
-                work={work}
-                index={i}
-                wide={works.length % 2 === 1 && i === works.length - 1}
-              />
+              <WorkCard key={work.slug} work={work} index={i} />
             ))}
           </div>
         </section>

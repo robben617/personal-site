@@ -1,145 +1,104 @@
 import Link from "next/link";
 import type { Work } from "@/lib/content";
 
-const BARS = [
-  "bg-[linear-gradient(90deg,#6366f1,#22d3ee)]",
-  "bg-[linear-gradient(90deg,#a855f7,#ec4899)]",
-  "bg-[linear-gradient(90deg,#0ea5e9,#34d399)]",
-];
-
-export function WorkCard({
-  work,
-  index,
-  wide = false,
-}: {
-  work: Work;
-  index: number;
-  wide?: boolean;
-}) {
+/**
+ * 作品卡：白底黑字的方形瓦片，按网格依次排布。
+ * 悬停时描边走一圈彩虹并向外弥散（样式在 globals.css 的 .glow-* / .work-card）。
+ */
+export function WorkCard({ work, index }: { work: Work; index: number }) {
   const ordinal = String(index + 1).padStart(2, "0");
   const ongoing = work.status !== "已交付";
 
-  const meta = (
-    <div className="flex items-start justify-between gap-3">
-      <span className="font-mono text-[11px] tabular-nums text-ink-3/70">
-        {ordinal}
-      </span>
-      <div className="flex items-center gap-2">
-        {ongoing ? (
-          <span className="rounded-full bg-ink/[0.05] px-2 py-0.5 text-[11px] text-ink-2">
-            {work.status}
-          </span>
-        ) : null}
-        <span className="text-[11px] text-ink-3">
-          {work.year} · {work.role}
-        </span>
-      </div>
-    </div>
-  );
-
-  const head = (
-    <>
-      <h3 className="mt-3 text-[17px] font-semibold leading-7 text-ink">
-        {work.title}
-      </h3>
-      <p className="mt-1.5 text-[13px] leading-6 text-ink-2">{work.oneLiner}</p>
-
-      {work.metrics.length > 0 ? (
-        <dl
-          className={`mt-4 grid grid-cols-3 gap-2 border-y border-ink/[0.07] py-3 ${
-            wide ? "md:max-w-[380px]" : ""
-          }`}
-        >
-          {work.metrics.map((m, i) => (
-            <div key={m.label}>
-              <dd
-                className={`font-mono text-[19px] font-medium tabular-nums ${
-                  i === 0 ? "grad-text" : "text-ink"
-                }`}
-              >
-                {m.value}
-              </dd>
-              <dt className="mt-0.5 text-[11px] text-ink-3">{m.label}</dt>
-            </div>
-          ))}
-        </dl>
-      ) : null}
-    </>
-  );
-
-  const tail = (
-    <>
-      <ul
-        className={`space-y-1.5 ${wide ? "md:grid md:grid-cols-2 md:gap-x-6 md:space-y-0" : ""}`}
-      >
-        {work.highlights.map((h) => (
-          <li
-            key={h}
-            className="relative pl-3.5 text-[12.5px] leading-6 text-ink-2 before:absolute before:left-0 before:top-[11px] before:h-1 before:w-1 before:rounded-full before:bg-ink-3/50"
-          >
-            {h}
-          </li>
-        ))}
-      </ul>
-
-      <div className="mt-4 flex flex-wrap items-center gap-1.5">
-        {work.stack.map((s) => (
-          <span
-            key={s}
-            className="rounded-md bg-ink/[0.045] px-1.5 py-0.5 font-mono text-[10.5px] text-ink-2"
-          >
-            {s}
-          </span>
-        ))}
-        {work.links.length > 0 ? (
-          <span className="ml-auto flex gap-3">
-            {work.links.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="text-[12px] text-brand hover:underline"
-              >
-                {l.label} ↗
-              </a>
-            ))}
-          </span>
-        ) : null}
-      </div>
-    </>
-  );
-
   return (
-    <article
-      className={`glass glass-hover rise group relative flex flex-col overflow-hidden rounded-2xl p-5 lg:p-6 ${
-        wide ? "md:col-span-2" : ""
-      }`}
-      style={{ animationDelay: `${index * 70}ms` }}
+    <div
+      className="glow-wrap rise h-full"
+      style={{ animationDelay: `${index * 80}ms` }}
     >
-      <div
-        aria-hidden="true"
-        className={`absolute inset-x-0 top-0 h-[3px] opacity-80 ${
-          BARS[index % BARS.length]
-        }`}
-      />
+      {/* 卡片外圈的彩虹光晕：同渐变 + 模糊，靠 z-index 铺在卡片背后 */}
+      <span aria-hidden="true" className="glow-halo" />
 
-      {wide ? (
-        <div className="md:flex md:items-start md:gap-10">
-          <div className="md:w-[44%] md:shrink-0">
-            {meta}
-            {head}
+      <article className="work-card flex h-full flex-col p-5 lg:p-6">
+        {/* 描边：mask 掉中间，只留 1.2px 的环 */}
+        <span aria-hidden="true" className="glow-ring" />
+
+
+
+        <div className="flex items-center justify-between gap-3">
+          <span className="font-mono text-[11px] tabular-nums tracking-wide text-ink-3">
+            {ordinal}
+          </span>
+          <div className="flex items-center gap-2">
+            {ongoing ? (
+              <span className="rounded-full bg-ink/[0.05] px-2 py-0.5 text-[10.5px] text-ink-2">
+                {work.status}
+              </span>
+            ) : null}
+            <span className="text-[11px] text-ink-3">
+              {work.year} · {work.role}
+            </span>
           </div>
-          <div className="mt-4 md:mt-3 md:flex-1">{tail}</div>
         </div>
-      ) : (
-        <>
-          {meta}
-          {head}
-          <div className="mt-4">{tail}</div>
-        </>
-      )}
-    </article>
+
+        <h3 className="mt-4 text-[18px] font-semibold leading-7 tracking-[-0.01em] text-ink">
+          {work.title}
+        </h3>
+        <p className="mt-2 text-[12.5px] leading-6 text-ink-2">{work.oneLiner}</p>
+
+        {work.metrics.length > 0 ? (
+          <dl className="mt-4 grid grid-cols-3 gap-2 border-y border-ink/[0.07] py-3">
+            {work.metrics.map((m, i) => (
+              <div key={m.label}>
+                <dd
+                  className={`font-mono text-[17px] font-medium tabular-nums ${
+                    i === 0 ? "grad-text" : "text-ink"
+                  }`}
+                >
+                  {m.value}
+                </dd>
+                <dt className="mt-0.5 text-[10.5px] text-ink-3">{m.label}</dt>
+              </div>
+            ))}
+          </dl>
+        ) : null}
+
+        <ul className="mt-4 space-y-1.5">
+          {work.highlights.map((h) => (
+            <li
+              key={h}
+              className="relative pl-3.5 text-[12px] leading-[1.8] text-ink-2 before:absolute before:left-0 before:top-[10px] before:h-1 before:w-1 before:rounded-full before:bg-ink-3/50"
+            >
+              {h}
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-5">
+          {work.stack.map((s) => (
+            <span
+              key={s}
+              className="rounded-md bg-ink/[0.045] px-1.5 py-0.5 font-mono text-[10.5px] text-ink-2"
+            >
+              {s}
+            </span>
+          ))}
+          {work.links.length > 0 ? (
+            <span className="ml-auto flex gap-3">
+              {work.links.map((l) => (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="text-[12px] text-brand hover:underline"
+                >
+                  {l.label} ↗
+                </a>
+              ))}
+            </span>
+          ) : null}
+        </div>
+      </article>
+    </div>
   );
 }
 
