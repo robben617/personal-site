@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 
 export default function AskPage() {
   return (
-    <div className="flex h-[calc(100svh-205px)] min-h-[440px] flex-col lg:h-full lg:min-h-0">
-      <header className="shrink-0 px-6 pb-4 pt-8 lg:px-14 lg:pb-5 lg:pt-12">
+    <div className="flex h-[calc(100svh-var(--nav-h))] min-h-[460px] flex-col">
+      <header className="shrink-0 px-6 pb-4 pt-8 lg:px-14 lg:pb-5 lg:pt-10">
         <div className="flex items-center gap-2">
           <span className="relative flex h-1.5 w-1.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-70" />

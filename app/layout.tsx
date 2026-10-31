@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Sidebar } from "@/components/sidebar";
+import { TopNav } from "@/components/topnav";
 import { profile } from "@/lib/content";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -74,17 +74,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
-        <div className="mx-auto w-full max-w-[1180px] lg:flex">
-          <Sidebar
+        <div className="min-h-dvh">
+          <TopNav
             name={name}
             alias={alias}
-            tagline={tagline}
             email={profile.basics.email}
             github={profile.basics.github}
           />
-          <main className="min-w-0 flex-1 lg:h-dvh lg:overflow-y-auto">
-            {children}
-          </main>
+          {/* 导航固定，内容整体让出导航高度；首页 hero 用负 margin 回到顶部铺满 */}
+          <main className="pt-[var(--nav-h)]">{children}</main>
         </div>
       </body>
     </html>

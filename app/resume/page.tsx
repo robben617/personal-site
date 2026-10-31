@@ -29,8 +29,8 @@ export default function ResumePage() {
   const b = profile.basics;
 
   return (
-    <div className="px-6 pb-16 pt-10 lg:px-14 lg:pb-24 lg:pt-16">
-      <div className="no-print mb-8 flex items-center justify-between">
+    <div className="mx-auto w-full max-w-[1180px] px-6 pb-16 pt-10 lg:px-14 lg:pb-24 lg:pt-14">
+      <div className="no-print mx-auto mb-8 flex max-w-[680px] items-center justify-between">
         <h2 className="text-[14px] font-medium text-ink">线上简历</h2>
         <PrintButton />
       </div>

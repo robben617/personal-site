@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { profile, works, getHeadlineMetrics } from "@/lib/content";
 import { WorkCard, AskEntry } from "@/components/work-card";
 import { IntroCurtain } from "@/components/intro";
@@ -7,7 +8,7 @@ function RetrievalFlow() {
     <svg
       viewBox="0 0 320 170"
       fill="none"
-      className="w-full max-w-[330px]"
+      className="h-auto w-full max-w-[330px]"
       role="img"
       aria-label="双路召回、RRF 融合与重排的流程示意"
     >
@@ -101,80 +102,111 @@ export default function HomePage() {
     <>
       <IntroCurtain />
 
-      <div className="px-6 pb-16 pt-10 lg:px-14 lg:pb-24 lg:pt-20">
-      <section className="rise">
-        <div className="flex items-center gap-3">
-          <span className="h-px w-9 bg-[linear-gradient(90deg,#6366f1,transparent)]" />
-          <span className="text-[11px] uppercase tracking-[0.24em] text-ink-3">
-            Portfolio
-          </span>
+      {/* ============ 封面 ============ */}
+      <section className="relative -mt-[var(--nav-h)] lg:min-h-svh">
+        {/*
+          窄屏：图片自成一段（62svh），文案落到下方浅色区，
+          否则 390px 宽下 3:2 的图只能取到 31% 宽度，文案必然压住插画主体。
+          桌面：图片绝对铺满整个首屏，文案压在星空区。
+        */}
+        <div className="relative h-[62svh] min-h-[360px] w-full overflow-hidden lg:absolute lg:inset-0 lg:h-full lg:min-h-0">
+          <Image
+            src="/bg-dusk-2560.webp"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            quality={82}
+            className="object-cover object-[52%_46%] lg:object-[50%_58%]"
+          />
+          <div className="hero-scrim" />
+          <div className="hero-fade" />
         </div>
 
-        <div className="mt-5 flex items-start justify-between gap-10">
-          <div className="max-w-[560px]">
-            <h2 className="text-[28px] font-semibold leading-[1.38] tracking-[-0.025em] text-ink lg:text-[40px]">
+        <div className="relative z-10 mx-auto w-full max-w-[1180px] px-6 pb-9 pt-7 lg:px-14 lg:pb-28 lg:pt-[calc(var(--nav-h)+72px)]">
+          <div className="lg:max-w-[760px]">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-9 bg-[linear-gradient(90deg,#6366f1,transparent)] lg:bg-[linear-gradient(90deg,#c7d2fe,rgba(199,210,254,0))]" />
+              <span className="text-[11px] uppercase tracking-[0.24em] text-ink-3 lg:text-white/60">
+                Portfolio
+              </span>
+            </div>
+
+            <h1 className="mt-4 text-[26px] font-semibold leading-[1.38] tracking-[-0.02em] text-ink lg:mt-5 lg:text-[38px] lg:leading-[1.34] lg:text-white lg:[text-shadow:0_2px_30px_rgba(4,6,20,0.55)]">
               {tagline}
-            </h2>
-            <p className="mt-5 text-[14px] leading-7 text-ink-2">{intro}</p>
+            </h1>
+
+            <p className="mt-4 max-w-[560px] text-[13.5px] leading-7 text-ink-2 lg:mt-5 lg:text-[14px] lg:text-white/75 lg:[text-shadow:0_1px_18px_rgba(4,6,20,0.6)]">
+              {intro}
+            </p>
+
+            <dl className="mt-7 flex flex-wrap items-end gap-x-12 gap-y-5 border-t border-ink/[0.07] pt-6 lg:mt-9 lg:border-white/[0.18] lg:pt-7">
+              {metrics.map((m, i) => (
+                <div key={m.label}>
+                  <dd
+                    className={`font-mono font-medium tabular-nums leading-none ${
+                      i === 0
+                        ? "grad-text text-[30px] lg:text-[44px]"
+                        : "text-[24px] text-ink lg:text-[30px] lg:text-white"
+                    }`}
+                  >
+                    {m.value}
+                  </dd>
+                  <dt className="mt-2 text-[11px] tracking-wide text-ink-3 lg:text-white/55">
+                    {m.label}
+                  </dt>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ 检索链路（横向细卡） ============ */}
+      <div className="mx-auto w-full max-w-[1180px] px-6 lg:px-14">
+        <section className="glass mt-6 rounded-2xl px-5 py-4 lg:-mt-16 lg:flex lg:items-center lg:gap-10 lg:py-4 lg:pr-6">
+          <div className="shrink-0">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3">
+              检索链路
+            </p>
+            <p className="mt-1.5 max-w-[320px] text-[12.5px] leading-6 text-ink-2">
+              jieba 与 BGE 双路召回，RRF 融合后重排，答案带原文出处。
+            </p>
+          </div>
+          <div className="mt-3 flex-1 lg:mt-0 lg:flex lg:justify-end">
+            <RetrievalFlow />
+          </div>
+        </section>
+      </div>
+
+      <div className="mx-auto w-full max-w-[1180px] px-6 pb-16 lg:px-14 lg:pb-24">
+        <section className="mt-12 lg:mt-16">
+          <div className="flex items-baseline justify-between border-b border-ink/[0.07] pb-3">
+            <h2 className="text-[14px] font-medium text-ink">作品</h2>
+            <span className="text-[11px] text-ink-3">共 {works.length} 个</span>
           </div>
 
-          <div className="hidden shrink-0 lg:block">
-            <div className="glass rounded-2xl px-5 pb-5 pt-4">
-              <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3">
-                检索链路
-              </p>
-              <RetrievalFlow />
-            </div>
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
+            {works.map((work, i) => (
+              <WorkCard
+                key={work.slug}
+                work={work}
+                index={i}
+                wide={works.length % 2 === 1 && i === works.length - 1}
+              />
+            ))}
           </div>
-        </div>
+        </section>
 
-        <dl className="mt-9 flex flex-wrap items-end gap-x-14 gap-y-6 border-t border-ink/[0.07] pt-7">
-          {metrics.map((m, i) => (
-            <div key={m.label}>
-              <dd
-                className={`font-mono font-medium tabular-nums leading-none ${
-                  i === 0
-                    ? "grad-text text-[34px] lg:text-[46px]"
-                    : "text-[26px] text-ink lg:text-[32px]"
-                }`}
-              >
-                {m.value}
-              </dd>
-              <dt className="mt-2 text-[11px] tracking-wide text-ink-3">
-                {m.label}
-              </dt>
-            </div>
-          ))}
-        </dl>
-      </section>
+        <section className="mt-12 lg:mt-16">
+          <AskEntry />
+        </section>
 
-      <section className="mt-14 lg:mt-20">
-        <div className="flex items-baseline justify-between border-b border-ink/[0.07] pb-3">
-          <h2 className="text-[14px] font-medium text-ink">作品</h2>
-          <span className="text-[11px] text-ink-3">共 {works.length} 个</span>
-        </div>
-
-        <div className="mt-5 grid gap-4 md:grid-cols-2">
-          {works.map((work, i) => (
-            <WorkCard
-              key={work.slug}
-              work={work}
-              index={i}
-              wide={works.length % 2 === 1 && i === works.length - 1}
-            />
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-14 lg:mt-20">
-        <AskEntry />
-      </section>
-
-      <footer className="mt-12 border-t border-ink/[0.07] pt-5">
-        <p className="text-[11px] leading-6 text-ink-3">
-          本站用 Next.js 构建，AI 分身由 DeepSeek 驱动，回答只基于站内资料。
-        </p>
-      </footer>
+        <footer className="mt-12 border-t border-ink/[0.07] pt-5">
+          <p className="text-[11px] leading-6 text-ink-3">
+            本站用 Next.js 构建，AI 分身由 DeepSeek 驱动，回答只基于站内资料。
+          </p>
+        </footer>
       </div>
     </>
   );
